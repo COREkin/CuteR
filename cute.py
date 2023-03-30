@@ -1,5 +1,7 @@
 from CuteR import CuteR as cr
 from PIL import Image
+import glob
+import os
 
 g = globals()
 
@@ -24,54 +26,53 @@ def add_margin(pil_img, top, right, bottom, left, color):
     result.paste(pil_img, (left, top))
     return result
 
-def main(urlList,imageList):
-    outputList =[]
-    for i in range(0,len(urlList)):
-        outputList.append(cr.produce(urlList[i],imageList[i],colourful=True))
+def convert(url_dict,image_list, add_margin_num):
+    output_list =[]
+    expanded_list = []
+    for image in image_list:
+        image_name, a = os.path.splitext(os.path.basename(image))
+        for name ,url in url_dict.items():
+            output_list.append([cr.produce(url,image,colourful=True), name + "_" + image_name])
+    print("\n output_list: \n %s" % output_list)
+    print("\n saving images...")
+    savepng(output_list)
+    if add_margin_num:
+        for output in output_list:
+            output[1] = output[1] + "_expanded"
+            expanded_list.append([[add_margin(output[0][0],add_margin_num,add_margin_num,add_margin_num,add_margin_num,(255,255,255))],output[1]])
     
-    return outputList
+        print("\n expanded_list: \n %s" % expanded_list)
+        print("\n saving images...")
+        savepng(expanded_list)
+
+def savepng(output_list):
+    for output in output_list:
+        output[0][0].save(f'./output/{output[1]}_QR.png',save_all=True,append_images=[],duration=100,optimize=True)
+    
 
 if __name__ == '__main__':
-    nameList = []
-    urlList = []
-    imageList = []
+    add_margin_num = 255 
+    url_dict = {}
+    image_list = []
 
-    nameList.append("blog")
-    urlList.append("https://kin-archive.tistory.com/")
-    imageList.append('kin.png')
+    #path = os.path.abspath('.')
+    print("import files.")
+    files = glob.glob("./images/*")
 
-    nameList.append("linkedin")
-    urlList.append("https://www.linkedin.com/in/dongsik-kim-b1725b194/")
-    imageList.append('kin.png')
+    for file in files:
+        image_list.append(file)
 
-    nameList.append("insta")
-    urlList.append("https://www.instagram.com/initial_dongsik/")
-    imageList.append('kin.png')
+    print("\n image_list: %s" % image_list)
 
-    nameList.append("katalk")
-    urlList.append("https://kin-archive.tistory.com/")
-    imageList.append("ajisai.jpg")
-
-    nameList.append("line")
-    urlList.append("https://www.linkedin.com/in/dongsik-kim-b1725b194/")
-    imageList.append("ajisai.jpg")
+    print("setting urls.")
+    url_dict["blog"] = "https://kin-archive.tistory.com/"
+    url_dict["linkedin"] = "https://www.linkedin.com/in/dongsik-kim-b1725b194/"
+    url_dict["insta"] = "https://www.instagram.com/initial_dongsik/"
+    url_dict["github"] = "https://github.com/COREkin/COREkin"
     
-    nameList.append("github")
-    urlList.append("https://github.com/COREkin/COREkin")
-    imageList.append('kin.png')
+    print("\n url_dict: %s" % url_dict)
 
-    outputList = main(urlList,imageList)
-
-    for i in range(0,len(outputList)):
-        outputList[i][0].save('kin{0}QR.png'.format(nameList[i]),save_all=True,append_images=outputList[i][1:],duration=100,optimize=True)
+    print("\n converting images...")
+    output_list = convert(url_dict, image_list, add_margin_num)
     
-
-    expand_num = 265
-    expandedList=[]
-    for i in range(0,len(outputList)):
-        expandedList.append(add_margin(outputList[i][0],expand_num,expand_num,expand_num,expand_num,(255,255,255)))
-
-    for i in range(0,len(expandedList)):
-        expandedList[i].save('expandkin{0}QR.png'.format(nameList[i]),save_all=True,append_images=outputList[i][1:],duration=100,optimize=True)
-    
-    print("complete.")
+    print("\ncomplete.\n")
