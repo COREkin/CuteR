@@ -33,8 +33,10 @@ def convert(url_dict,image_list, add_margin_num):
         image_name, a = os.path.splitext(os.path.basename(image))
         for name ,url in url_dict.items():
             output_list.append([cr.produce(url,image,colourful=True), name + "_" + image_name])
+
     print("\n output_list: \n %s" % output_list)
     print("\n saving images...")
+
     savepng(output_list)
     if add_margin_num:
         for output in output_list:
@@ -43,6 +45,7 @@ def convert(url_dict,image_list, add_margin_num):
     
         print("\n expanded_list: \n %s" % expanded_list)
         print("\n saving images...")
+        
         savepng(expanded_list)
 
 def savepng(output_list):
@@ -55,7 +58,6 @@ if __name__ == '__main__':
     url_dict = {}
     image_list = []
 
-    #path = os.path.abspath('.')
     print("import files.")
     files = glob.glob("./images/*")
 
