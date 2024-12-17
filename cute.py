@@ -69,7 +69,7 @@ if __name__ == '__main__':
     print("setting urls.")
     url_dict["blog"] = "https://kin-archive.tistory.com/"
     url_dict["linkedin"] = "https://www.linkedin.com/in/dongsik-kim-b1725b194/"
-    url_dict["insta"] = "https://www.instagram.com/initial_dongsik/"
+    url_dict["insta"] = "https://www.instagram.com/dongsik_kim03/"
     url_dict["github"] = "https://github.com/COREkin/COREkin"
     
     print("\n url_dict: %s" % url_dict)
